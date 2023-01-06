@@ -61,8 +61,32 @@ export const createNewBoard = Array.from(Array(20), () => {
   return newArr.fill(0);
 });
 
+const rotateBlockToClockwiseDir = (newBlock: number[][]): number[][] => {
+  const blockToReturn: number[][] = [];
+
+  const x = newBlock[0].length;
+  const y = newBlock.length;
+  blockToReturn.length = x;
+  for (let i = 0; i < newBlock[0].length; i += 1) {
+    blockToReturn[i] = [];
+  }
+  blockToReturn[0].length = y;
+
+  for (let i = 0; i < y; i += 1) {
+    for (let j = 0; j < x; j += 1) {
+      blockToReturn[j][y - i - 1] = newBlock[i][j];
+    }
+  }
+
+  return blockToReturn;
+};
+
 const rotateBlock = (newBlock: number[][], rotation: number) => {
-  // matrix rotate ALG
+  let rotatedBlock: number[][] = [];
+  for (let i = 0; i < rotation; i += 1) {
+    rotatedBlock = rotateBlockToClockwiseDir(newBlock);
+  }
+  return rotatedBlock;
 };
 
 export const putBlockOnBoard = (
