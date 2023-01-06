@@ -101,7 +101,17 @@ export const putBlockOnBoard = (
   if (/0-3/.test(rotation.toString())) {
     throw new Error('rotation must be included in 0-3');
   }
-  const rotatedBlock = rotateBlock(newBlock, rotation);
+  const rotatedBlock = rotation === 0 ? newBlock : rotateBlock(newBlock, rotation);
   // put block on board and return board
-  return board;
+  const currentBoard = board;
+  const x = rotatedBlock[0].length;
+  const y = rotatedBlock.length;
+  for (let i = 0; i < y; i += 1) {
+    for (let j = 0; j < x; j += 1) {
+      if (currentBoard[position[0] + i][position[1] + j] === 0 && rotatedBlock[i][j] === 1) {
+        currentBoard[position[0] + i][position[1] + j] = 1;
+      }
+    }
+  }
+  return currentBoard;
 };
