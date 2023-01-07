@@ -55,7 +55,7 @@ export const block = {
   },
 };
 
-export const createNewBoard = Array.from(Array(20), () => {
+export const createNewBoard = (): number[][] => Array.from(Array(20), () => {
   const newArr: number[] = [];
   newArr.length = 20;
   return newArr.fill(0);
@@ -82,9 +82,9 @@ const rotateBlockToClockwiseDir = (newBlock: number[][]): number[][] => {
 };
 
 const rotateBlock = (newBlock: number[][], rotation: number) => {
-  let rotatedBlock: number[][] = [];
+  let rotatedBlock: number[][] = newBlock;
   for (let i = 0; i < rotation; i += 1) {
-    rotatedBlock = rotateBlockToClockwiseDir(newBlock);
+    rotatedBlock = rotateBlockToClockwiseDir(rotatedBlock);
   }
   return rotatedBlock;
 };
@@ -103,6 +103,7 @@ export const putBlockOnBoard = (
   }
   const rotatedBlock = rotation === 0 ? newBlock : rotateBlock(newBlock, rotation);
   // put block on board and return board
+  // 맨 왼 쪽 첫 번째 블럭(newBlock[0][0])이 들어갈 위치를 position으로 받아옴
   const currentBoard = board;
   const x = rotatedBlock[0].length;
   const y = rotatedBlock.length;
