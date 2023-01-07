@@ -1,4 +1,4 @@
-export const block = {
+export const BLOCK = {
   five: {
     a: [[1, 1, 1, 1, 1]],
     b: [
@@ -89,11 +89,59 @@ const rotateBlock = (newBlock: number[][], rotation: number) => {
   return rotatedBlock;
 };
 
+const isAvailableArea = (board: number[][], block: number[][], position: number[]) => {
+  if (position[0] + block[0].length > 20 || position[1] + block.length > 20) {
+    throw new Error('range out');
+  }
+  const x = block[0].length;
+  const y = block.length;
+  const affectedArea: (number | string)[][] = [];
+  for (let i = position[0] - 1; i <= position[0] + y; i += 1) {
+    for (let j = position[1] - 1; j <= position[1] + x; j += 1) {
+      if (!affectedArea[i - position[0] + 1]) {
+        affectedArea[i - position[0] + 1] = [];
+      }
+      affectedArea[i - position[0] + 1][j - position[1] + 1] = board[i][j];
+
+      if (i - position[0] >= 0 && j - position[1] >= 0
+        && i - position[0] < block.length && j - position[1] < block.length
+        && block[i - position[0]][j - position[1]] === 1
+        && affectedArea[i - position[0] + 1][j - position[1] + 1] !== 0) {
+        throw new Error('blocks folded');
+      }
+      if (i - position[0] >= 0 && j - position[1] >= 0
+        && i - position[0] < block.length && j - position[1] < block.length
+      && block[i - position[0]][j - position[1]] === 1
+      && affectedArea[i - position[0] + 1][j - position[1] + 1] === 0) {
+        affectedArea[i - position[0] + 1][j - position[1] + 1] = 'n';
+      }
+    }
+  }
+  let flag = false;
+  for (let i = 0; i < affectedArea.length; i += 1) {
+    for (let j = 0; j < affectedArea[0].length; j += 1) {
+      if (affectedArea[i][j] === 'n' && (affectedArea[i - 1][j - 1] === 1
+      || affectedArea[i + 1][j + 1] === 1
+      || affectedArea[i - 1][j + 1] === 1 || affectedArea[i + 1][j - 1] === 1)) {
+        flag = true;
+      }
+      if (affectedArea[i][j] === 'n' && (affectedArea[i - 1][j] === 1
+      || affectedArea[i][j - 1] === 1 || affectedArea[i + 1][j] === 1
+      || affectedArea[i][j + 1] === 1)) {
+        throw new Error('no adjacent block');
+      }
+    }
+  }
+  if (!flag) {
+    throw new Error('no block connected');
+  }
+};
+
 export const putBlockOnBoard = (
   board: number[][],
   newBlock: number[][],
   position: number[],
-  rotation: number,
+  rotation = 0,
 ): number[][] => {
   if (position.length !== 2) {
     throw new Error('position length must be 2');
