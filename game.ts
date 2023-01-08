@@ -1,3 +1,13 @@
+import chalk from 'chalk';
+
+/**
+ * 디버깅용 함수. 콘솔 출력 시 블록에 색 입히기 시도(안 되면 삭제 예정)
+ */
+const printBlock = (board: (string | number)[][]) => {
+  const { table } = console;
+  table(chalk.blue(board));
+};
+
 export const BLOCK = {
   five: {
     a: [[1, 1, 1, 1, 1]],
