@@ -55,8 +55,8 @@ export const BLOCK = {
   },
 };
 
-export const createNewBoard = (): number[][] => Array.from(Array(20), () => {
-  const newArr: number[] = [];
+export const createNewBoard = (): (string | number)[][] => Array.from(Array(20), () => {
+  const newArr: (string | number)[] = [];
   newArr.length = 20;
   return newArr.fill(0);
 });
@@ -89,7 +89,7 @@ const rotateBlock = (newBlock: number[][], rotation: number) => {
   return rotatedBlock;
 };
 
-const isAvailableArea = (board: number[][], block: number[][], position: number[]) => {
+const isAvailableArea = (board: (string | number)[][], block: number[][], position: number[]) => {
   if (position[0] + block[0].length > 20 || position[1] + block.length > 20) {
     throw new Error('range out');
   }
@@ -135,14 +135,17 @@ const isAvailableArea = (board: number[][], block: number[][], position: number[
   if (!flag) {
     throw new Error('no block connected');
   }
+  return true;
 };
 
 export const putBlockOnBoard = (
-  board: number[][],
+  board: (string | number)[][],
   newBlock: number[][],
   position: number[],
   rotation = 0,
-): number[][] => {
+  player: string,
+): (string | number
+  )[][] => {
   if (position.length !== 2) {
     throw new Error('position length must be 2');
   }
@@ -153,12 +156,14 @@ export const putBlockOnBoard = (
   // put block on board and return board
   // 맨 왼 쪽 첫 번째 블럭(newBlock[0][0])이 들어갈 위치를 position으로 받아옴
   const currentBoard = board;
-  const x = rotatedBlock[0].length;
-  const y = rotatedBlock.length;
-  for (let i = 0; i < y; i += 1) {
-    for (let j = 0; j < x; j += 1) {
-      if (currentBoard[position[0] + i][position[1] + j] === 0 && rotatedBlock[i][j] === 1) {
-        currentBoard[position[0] + i][position[1] + j] = 1;
+  if (isAvailableArea(currentBoard, rotatedBlock, position)) {
+    const x = rotatedBlock[0].length;
+    const y = rotatedBlock.length;
+    for (let i = 0; i < y; i += 1) {
+      for (let j = 0; j < x; j += 1) {
+        if (currentBoard[position[0] + i][position[1] + j] === 0 && rotatedBlock[i][j] === 1) {
+          currentBoard[position[0] + i][position[1] + j] = player;
+        }
       }
     }
   }
