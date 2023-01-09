@@ -1,8 +1,42 @@
 /**
- * 디버깅용 함수. 콘솔 출력 시 블록에 색 입히기 시도(안 되면 삭제 예정)
+ * 디버깅용 함수들. 콘솔 출력 시 블록에 색 입히기
  */
-const printBlock = (board: (string | number)[][]) => {
-
+const putColorOnBlocks = (rowOfBoard: (string | number)[]) => {
+  let strToReturn = '';
+  rowOfBoard.forEach((e: string | number, idx: number) => {
+    switch (e) {
+      case 'a':
+        strToReturn += `${idx === 0 ? '│' : ' '}\x1b[44m\x1b[33ma \x1b[40m\x1b[37m${idx < 19 && rowOfBoard[idx + 1] === rowOfBoard[idx] ? '\x1b[44m' : ''}`;
+        break;
+      case 'b':
+        strToReturn += `${idx === 0 ? '│' : ' '}\x1b[43m\x1b[30mb \x1b[40m\x1b[37m${idx < 19 && rowOfBoard[idx + 1] === rowOfBoard[idx] ? '\x1b[43m' : ''}`;
+        break;
+      case 'c':
+        strToReturn += `${idx === 0 ? '│' : ' '}\x1b[41m\x1b[37mc \x1b[40m\x1b[37m${idx < 19 && rowOfBoard[idx + 1] === rowOfBoard[idx] ? '\x1b[41m' : ''}`;
+        break;
+      case 'd':
+        strToReturn += `${idx === 0 ? '│' : ' '}\x1b[42m\x1b[37md \x1b[40m\x1b[37m${idx < 19 && rowOfBoard[idx + 1] === rowOfBoard[idx] ? '\x1b[42m' : ''}`;
+        break;
+      default:
+        strToReturn += `${idx === 0 ? '│' : ' '}\x1b[40m\x1b[37m0 \x1b[40m\x1b[37m`;
+        break;
+    }
+  });
+  return strToReturn;
+};
+const strToPrint = (board: (string | number)[][]) => {
+  let strToReturn = '';
+  for (let i = 0; i < board.length; i += 1) {
+    strToReturn += `│ ${i.toString().length === 1 ? `${i} ` : i} ${putColorOnBlocks(board[i])}│${i === 19 ? '' : '\n'}`;
+  }
+  return strToReturn;
+};
+const printBoard = (board: (string | number)[][]) => {
+  global.console.log(`┌────┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┐
+│idx │0 │1 │2 │3 │4 │5 │6 │7 │8 │9 │10│11│12│13│14│15│16│17│18│19│
+├────┼──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┤
+${strToPrint(board)}
+└────┴───────────────────────────────────────────────────────────┘`);
 };
 
 export const BLOCK = {
@@ -96,7 +130,9 @@ const rotateBlock = (newBlock: number[][], rotation: number) => {
   return rotatedBlock;
 };
 
-const isAvailableArea = (board: (string | number)[][], block: number[][], position: number[]) => {
+export const isAvailableArea = (
+  board: (string | number)[][], block: number[][], position: number[], player: string,
+): boolean => {
   if (position[1] + block[0].length > 20 || position[0] + block.length > 20) {
     throw new Error('range out');
   }
@@ -124,6 +160,7 @@ const isAvailableArea = (board: (string | number)[][], block: number[][], positi
         && affectedArea[i - position[0] + 1][j - position[1] + 1] !== 0) {
         throw new Error('blocks folded');
       }
+      // [TODO] 에러 케이스) BLOCK.five.a
       if (i - position[0] >= 0 && j - position[1] >= 0
         && i - position[0] < block.length && j - position[1] < block.length
       && block[i - position[0]][j - position[1]] === 1
@@ -135,9 +172,9 @@ const isAvailableArea = (board: (string | number)[][], block: number[][], positi
   let flag = false;
   for (let i = 0; i < affectedArea.length; i += 1) {
     for (let j = 0; j < affectedArea[0].length; j += 1) {
-      if (affectedArea[i][j] === 'n' && (affectedArea[i - 1][j - 1] === 1
-      || affectedArea[i + 1][j + 1] === 1
-      || affectedArea[i - 1][j + 1] === 1 || affectedArea[i + 1][j - 1] === 1)) {
+      if (affectedArea[i][j] === 'n' && (affectedArea[i - 1][j - 1] === player
+      || affectedArea[i + 1][j + 1] === player
+      || affectedArea[i - 1][j + 1] === player || affectedArea[i + 1][j - 1] === player)) {
         flag = true;
       }
       if (affectedArea[i][j] === 'n' && (affectedArea[i - 1][j] === 1
@@ -171,7 +208,7 @@ export const putBlockOnBoard = (
   // put block on board and return board
   // 맨 왼 쪽 첫 번째 블럭(newBlock[0][0])이 들어갈 위치를 position으로 받아옴
   const currentBoard = board;
-  if (isAvailableArea(currentBoard, rotatedBlock, position)) {
+  if (isAvailableArea(currentBoard, rotatedBlock, position, player)) {
     const x = rotatedBlock[0].length;
     const y = rotatedBlock.length;
     for (let i = 0; i < y; i += 1) {
