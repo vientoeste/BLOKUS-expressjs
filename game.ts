@@ -1,11 +1,8 @@
-import chalk from 'chalk';
-
 /**
  * 디버깅용 함수. 콘솔 출력 시 블록에 색 입히기 시도(안 되면 삭제 예정)
  */
 const printBlock = (board: (string | number)[][]) => {
-  const { table } = console;
-  table(chalk.blue(board));
+
 };
 
 export const BLOCK = {
@@ -100,14 +97,22 @@ const rotateBlock = (newBlock: number[][], rotation: number) => {
 };
 
 const isAvailableArea = (board: (string | number)[][], block: number[][], position: number[]) => {
-  if (position[0] + block[0].length > 20 || position[1] + block.length > 20) {
+  if (position[1] + block[0].length > 20 || position[0] + block.length > 20) {
     throw new Error('range out');
   }
   const x = block[0].length;
   const y = block.length;
   const affectedArea: (number | string)[][] = [];
+  const regExpY = new RegExp(`0|${20 - y}`);
+  const regExpX = new RegExp(`0|${20 - x}`);
+  if (regExpY.test(position[0].toString()) && regExpX.test(position[1].toString())) {
+    return true;
+  }
   for (let i = position[0] - 1; i <= position[0] + y; i += 1) {
     for (let j = position[1] - 1; j <= position[1] + x; j += 1) {
+      if (i - position[0] < -1) {
+        continue;
+      }
       if (!affectedArea[i - position[0] + 1]) {
         affectedArea[i - position[0] + 1] = [];
       }
