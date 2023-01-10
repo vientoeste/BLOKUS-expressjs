@@ -39,7 +39,7 @@ ${strToPrint(board)}
 └────┴───────────────────────────────────────────────────────────┘`);
 };
 
-export const BLOCK = {
+export const BLOCK: Record<string, Record<string, number[][]>> = {
   five: {
     a: [[1, 1, 1, 1, 1]],
     b: [
@@ -76,6 +76,24 @@ export const BLOCK = {
       [1, 1, 1],
       [1, 0, 0],
     ],
+    i: [
+      [1, 0],
+      [1, 1],
+      [1, 1],
+    ],
+    j: [
+      [1, 1, 0, 0],
+      [0, 1, 1, 1],
+    ],
+    k: [
+      [1, 1],
+      [1, 0],
+      [1, 1],
+    ],
+    l: [
+      [0, 1, 0, 0],
+      [1, 1, 1, 1],
+    ],
   },
   four: {
     a: [[1, 1, 1, 1]],
@@ -101,6 +119,14 @@ export const createNewBoard = (): (string | number)[][] => Array.from(Array(20),
   newArr.length = 20;
   return newArr.fill(0);
 });
+
+const flipBlock = (block: number[][]) => {
+  const blockToReturn: number[][] = [];
+  for (let i = 0; i < block.length; i += 1) {
+    blockToReturn.push(block[block.length - 1 - i]);
+  }
+  return blockToReturn;
+};
 
 const rotateBlockToClockwiseDir = (newBlock: number[][]): number[][] => {
   const blockToReturn: number[][] = [];
@@ -160,7 +186,6 @@ export const isAvailableArea = (
         && affectedArea[i - position[0] + 1][j - position[1] + 1] !== 0) {
         throw new Error('blocks folded');
       }
-      // [TODO] 에러 케이스) BLOCK.five.a
       if (i - position[0] >= 0 && j - position[1] >= 0
         && i - position[0] < block.length && j - position[1] < block[0].length
       && block[i - position[0]][j - position[1]] === 1
@@ -194,8 +219,9 @@ export const putBlockOnBoard = (
   board: (string | number)[][],
   newBlock: number[][],
   position: number[],
-  rotation = 0,
+  rotation: number,
   player: string,
+  flip = false,
 ): (string | number
   )[][] => {
   if (position.length !== 2) {
@@ -204,9 +230,10 @@ export const putBlockOnBoard = (
   if (/0-3/.test(rotation.toString())) {
     throw new Error('rotation must be included in 0-3');
   }
-  const rotatedBlock = rotation === 0 ? newBlock : rotateBlock(newBlock, rotation);
-  // put block on board and return board
-  // 맨 왼 쪽 첫 번째 블럭(newBlock[0][0])이 들어갈 위치를 position으로 받아옴
+  let rotatedBlock = rotation === 0 ? newBlock : rotateBlock(newBlock, rotation);
+  if (flip) {
+    rotatedBlock = flipBlock(rotatedBlock);
+  }
   const currentBoard = board;
   if (isAvailableArea(currentBoard, rotatedBlock, position, player)) {
     const x = rotatedBlock[0].length;
