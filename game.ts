@@ -172,7 +172,8 @@ export const isAvailableArea = (
   }
   for (let i = position[0] - 1; i <= position[0] + y; i += 1) {
     for (let j = position[1] - 1; j <= position[1] + x; j += 1) {
-      if (i - position[0] < -1) {
+      if ((i - position[0] === -1 && position[0] === 0)
+      || i === 20) {
         continue;
       }
       if (!affectedArea[i - position[0] + 1]) {
@@ -194,16 +195,22 @@ export const isAvailableArea = (
       }
     }
   }
+  if (!affectedArea[0]) {
+    affectedArea.shift();
+  }
   let flag = false;
   for (let i = 0; i < affectedArea.length; i += 1) {
     for (let j = 0; j < affectedArea[0].length; j += 1) {
-      if (affectedArea[i][j] === 'n' && (affectedArea[i - 1][j - 1] === player
-      || affectedArea[i + 1][j + 1] === player
-      || affectedArea[i - 1][j + 1] === player || affectedArea[i + 1][j - 1] === player)) {
+      if (affectedArea[i][j] === 'n' && ((position[0] !== 0 && affectedArea[i - 1][j - 1] === player)
+      || (position[0] !== 0 && affectedArea[i - 1][j + 1] === player)
+      || (position[0] !== 19 && affectedArea[i + 1][j + 1] === player)
+      || (position[0] !== 19 && affectedArea[i + 1][j - 1] === player))) {
         flag = true;
       }
-      if (affectedArea[i][j] === 'n' && (affectedArea[i - 1][j] === player
-      || affectedArea[i][j - 1] === player || affectedArea[i + 1][j] === player
+      if (affectedArea[i][j] === 'n' && (
+        (position[0] !== 0 && affectedArea[i - 1][j] === player)
+      || affectedArea[i][j - 1] === player
+      || (position[0] !== 19 && affectedArea[i + 1][j] === player)
       || affectedArea[i][j + 1] === player)) {
         throw new Error('no adjacent block');
       }
