@@ -31,7 +31,7 @@ const strToPrint = (board: (string | number)[][]) => {
   }
   return strToReturn;
 };
-const printBoard = (board: (string | number)[][]) => {
+export const printBoard = (board: (string | number)[][]): void => {
   global.console.log(`┌────┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┐
 │idx │0 │1 │2 │3 │4 │5 │6 │7 │8 │9 │10│11│12│13│14│15│16│17│18│19│
 ├────┼──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┤
@@ -162,7 +162,7 @@ export const isAvailableArea = (
       }
       // [TODO] 에러 케이스) BLOCK.five.a
       if (i - position[0] >= 0 && j - position[1] >= 0
-        && i - position[0] < block.length && j - position[1] < block.length
+        && i - position[0] < block.length && j - position[1] < block[0].length
       && block[i - position[0]][j - position[1]] === 1
       && affectedArea[i - position[0] + 1][j - position[1] + 1] === 0) {
         affectedArea[i - position[0] + 1][j - position[1] + 1] = 'n';
@@ -177,9 +177,9 @@ export const isAvailableArea = (
       || affectedArea[i - 1][j + 1] === player || affectedArea[i + 1][j - 1] === player)) {
         flag = true;
       }
-      if (affectedArea[i][j] === 'n' && (affectedArea[i - 1][j] === 1
-      || affectedArea[i][j - 1] === 1 || affectedArea[i + 1][j] === 1
-      || affectedArea[i][j + 1] === 1)) {
+      if (affectedArea[i][j] === 'n' && (affectedArea[i - 1][j] === player
+      || affectedArea[i][j - 1] === player || affectedArea[i + 1][j] === player
+      || affectedArea[i][j + 1] === player)) {
         throw new Error('no adjacent block');
       }
     }
