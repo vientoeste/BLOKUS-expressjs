@@ -203,14 +203,14 @@ export const isAvailableArea = (
     for (let j = 0; j < affectedArea[0].length; j += 1) {
       if (affectedArea[i][j] === 'n' && ((position[0] !== 0 && affectedArea[i - 1][j - 1] === player)
       || (position[0] !== 0 && affectedArea[i - 1][j + 1] === player)
-      || (position[0] !== 19 && affectedArea[i + 1][j + 1] === player)
-      || (position[0] !== 19 && affectedArea[i + 1][j - 1] === player))) {
+      || (position[0] + y !== 20 && affectedArea[i + 1][j + 1] === player)
+      || (position[0] + y !== 20 && affectedArea[i + 1][j - 1] === player))) {
         flag = true;
       }
       if (affectedArea[i][j] === 'n' && (
         (position[0] !== 0 && affectedArea[i - 1][j] === player)
       || affectedArea[i][j - 1] === player
-      || (position[0] !== 19 && affectedArea[i + 1][j] === player)
+      || (position[0] + y !== 20 && affectedArea[i + 1][j] === player)
       || affectedArea[i][j + 1] === player)) {
         throw new Error('no adjacent block');
       }
