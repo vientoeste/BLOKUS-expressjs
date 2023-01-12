@@ -201,10 +201,13 @@ export const isAvailableArea = (
   let flag = false;
   for (let i = 0; i < affectedArea.length; i += 1) {
     for (let j = 0; j < affectedArea[0].length; j += 1) {
-      if (affectedArea[i][j] === 'n' && ((position[0] !== 0 && affectedArea[i - 1][j - 1] === player)
-      || (position[0] !== 0 && affectedArea[i - 1][j + 1] === player)
-      || (position[0] + y !== 20 && affectedArea[i + 1][j + 1] === player)
-      || (position[0] + y !== 20 && affectedArea[i + 1][j - 1] === player))) {
+      if (affectedArea[i][j] === 'n'
+      && ((i > 0
+        && (affectedArea[i - 1][j - 1] === player
+          || affectedArea[i - 1][j + 1] === player))
+      || (i < affectedArea.length - 1
+        && (affectedArea[i + 1][j + 1] === player
+          || affectedArea[i + 1][j - 1] === player)))) {
         flag = true;
       }
       if (affectedArea[i][j] === 'n' && (
