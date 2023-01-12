@@ -168,7 +168,22 @@ export const isAvailableArea = (
   const regExpY = new RegExp(`0|${20 - y}`);
   const regExpX = new RegExp(`0|${20 - x}`);
   if (regExpY.test(position[0].toString()) && regExpX.test(position[1].toString())) {
-    return true;
+    if (((position[0] === 0
+      && ((player === 'a' && position[1] === 0 && block[0][0] === 1)
+      || (player === 'd' && position[1] === 20 - x && block[0][block[0].length - 1] === 1)))
+    || (position[0] === 20 - y
+      && ((player === 'b' && position[1] === 0 && block[block.length - 1][0] === 1)
+      || (player === 'c' && position[1] === 20 - x && block[block.length - 1][block[0].length - 1] === 1))))) {
+      return true;
+    }
+    if (((position[0] === 0
+      && ((player === 'a' && position[1] === 0 && block[0][0] !== 1)
+      || (player === 'd' && position[1] === 20 - x && block[0][block[0].length - 1] !== 1)))
+    || (position[0] === 20 - y
+      && ((player === 'b' && position[1] === 0 && block[block.length - 1][0] !== 1)
+      || (player === 'c' && position[1] === 20 - x && block[block.length - 1][block[0].length - 1] !== 1))))) {
+      throw new Error('no block on vertex');
+    }
   }
   for (let i = position[0] - 1; i <= position[0] + y; i += 1) {
     for (let j = position[1] - 1; j <= position[1] + x; j += 1) {
