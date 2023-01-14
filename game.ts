@@ -197,7 +197,7 @@ export const isAvailableArea = (
       affectedArea[i - position[0] + 1][j - position[1] + 1] = board[i][j];
 
       if (i - position[0] >= 0 && j - position[1] >= 0
-        && i - position[0] < block.length && j - position[1] < block.length
+        && i - position[0] < block.length && j - position[1] < block[0].length
         && block[i - position[0]][j - position[1]] === 1
         && affectedArea[i - position[0] + 1][j - position[1] + 1] !== 0) {
         throw new Error('blocks folded');
