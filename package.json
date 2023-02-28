@@ -2,6 +2,7 @@
   "name": "blokus",
   "version": "0.0.1",
   "description": "este's personal project :: implement a board game(blokus) using WS",
+  "type": "module",
   "watch": {
     "start": "**.js"
   },
@@ -42,6 +43,7 @@
   "dependencies": {
     "chokidar": "^3.5.3",
     "express": "^4.18.2",
+    "mongodb": "^5.1.0",
     "nunjucks": "^3.2.3",
     "ws": "^8.11.0"
   },

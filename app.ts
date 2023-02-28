@@ -3,6 +3,7 @@ import express, {
 } from 'express';
 import path from 'path';
 import nunjucks from 'nunjucks';
+import mainRouter from './router/index';
 
 const app = express();
 const dirname = __dirname.slice(0, -4);
@@ -15,10 +16,6 @@ nunjucks.configure('views', {
 });
 
 app.use(express.static(path.join(dirname, 'public')));
-
-app.route('/').get((req: Request, res: Response) => {
-  // res.sendFile(path.join(dirname, 'view', 'ex.html'));
-  res.render('main', { title: 'test' });
-});
+app.use('/', mainRouter);
 
 app.listen(3000);

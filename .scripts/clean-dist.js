@@ -1,7 +1,9 @@
-const { rmSync } = require("fs");
-const { resolve } = require("path");
+import { rmSync } from "fs";
+import { resolve } from "path";
+import { fileURLToPath } from "url";
 
-const distFolder = resolve(__dirname, "..", "dist");
+const dirname = fileURLToPath(new URL('.', import.meta.url))
+const distFolder = resolve(dirname, "..", "dist");
 
 try {
   rmSync(distFolder, { recursive: true });
