@@ -3,10 +3,12 @@ import express, {
 } from 'express';
 import path from 'path';
 import nunjucks from 'nunjucks';
-import mainRouter from './router/index';
+import { fileURLToPath } from 'url';
+import mainRouter from './router/index.js';
+
+const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 const app = express();
-const dirname = __dirname.slice(0, -4);
 
 app.set('view engine', 'njk');
 
