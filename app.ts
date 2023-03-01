@@ -1,9 +1,8 @@
-import express, {
-  Request, Response,
-} from 'express';
+import express from 'express';
 import path from 'path';
 import nunjucks from 'nunjucks';
 import { fileURLToPath } from 'url';
+
 import mainRouter from './router/index.js';
 
 const dirname = fileURLToPath(new URL('.', import.meta.url));
