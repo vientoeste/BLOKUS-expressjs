@@ -170,25 +170,25 @@ export const isAvailableArea = (
   if (regExpY.test(position[0].toString()) && regExpX.test(position[1].toString())) {
     if (((position[0] === 0
       && ((player === 'a' && position[1] === 0 && block[0][0] === 1)
-      || (player === 'd' && position[1] === 20 - x && block[0][block[0].length - 1] === 1)))
-    || (position[0] === 20 - y
-      && ((player === 'b' && position[1] === 0 && block[block.length - 1][0] === 1)
-      || (player === 'c' && position[1] === 20 - x && block[block.length - 1][block[0].length - 1] === 1))))) {
+        || (player === 'd' && position[1] === 20 - x && block[0][block[0].length - 1] === 1)))
+      || (position[0] === 20 - y
+        && ((player === 'b' && position[1] === 0 && block[block.length - 1][0] === 1)
+          || (player === 'c' && position[1] === 20 - x && block[block.length - 1][block[0].length - 1] === 1))))) {
       return true;
     }
     if (((position[0] === 0
       && ((player === 'a' && position[1] === 0 && block[0][0] !== 1)
-      || (player === 'd' && position[1] === 20 - x && block[0][block[0].length - 1] !== 1)))
-    || (position[0] === 20 - y
-      && ((player === 'b' && position[1] === 0 && block[block.length - 1][0] !== 1)
-      || (player === 'c' && position[1] === 20 - x && block[block.length - 1][block[0].length - 1] !== 1))))) {
+        || (player === 'd' && position[1] === 20 - x && block[0][block[0].length - 1] !== 1)))
+      || (position[0] === 20 - y
+        && ((player === 'b' && position[1] === 0 && block[block.length - 1][0] !== 1)
+          || (player === 'c' && position[1] === 20 - x && block[block.length - 1][block[0].length - 1] !== 1))))) {
       throw new Error('no block on vertex');
     }
   }
   for (let i = position[0] - 1; i <= position[0] + y; i += 1) {
     for (let j = position[1] - 1; j <= position[1] + x; j += 1) {
       if ((i - position[0] === -1 && position[0] === 0)
-      || i === 20) {
+        || i === 20) {
         continue;
       }
       if (!affectedArea[i - position[0] + 1]) {
@@ -204,8 +204,8 @@ export const isAvailableArea = (
       }
       if (i - position[0] >= 0 && j - position[1] >= 0
         && i - position[0] < block.length && j - position[1] < block[0].length
-      && block[i - position[0]][j - position[1]] === 1
-      && affectedArea[i - position[0] + 1][j - position[1] + 1] === 0) {
+        && block[i - position[0]][j - position[1]] === 1
+        && affectedArea[i - position[0] + 1][j - position[1] + 1] === 0) {
         affectedArea[i - position[0] + 1][j - position[1] + 1] = 'n';
       }
     }
@@ -217,19 +217,19 @@ export const isAvailableArea = (
   for (let i = 0; i < affectedArea.length; i += 1) {
     for (let j = 0; j < affectedArea[0].length; j += 1) {
       if (affectedArea[i][j] === 'n'
-      && ((i > 0
-        && (affectedArea[i - 1][j - 1] === player
-          || affectedArea[i - 1][j + 1] === player))
-      || (i < affectedArea.length - 1
-        && (affectedArea[i + 1][j + 1] === player
-          || affectedArea[i + 1][j - 1] === player)))) {
+        && ((i > 0
+          && (affectedArea[i - 1][j - 1] === player
+            || affectedArea[i - 1][j + 1] === player))
+          || (i < affectedArea.length - 1
+            && (affectedArea[i + 1][j + 1] === player
+              || affectedArea[i + 1][j - 1] === player)))) {
         flag = true;
       }
       if (affectedArea[i][j] === 'n' && (
         (position[0] !== 0 && affectedArea[i - 1][j] === player)
-      || affectedArea[i][j - 1] === player
-      || (position[0] + y !== 20 && affectedArea[i + 1][j] === player)
-      || affectedArea[i][j + 1] === player)) {
+        || affectedArea[i][j - 1] === player
+        || (position[0] + y !== 20 && affectedArea[i + 1][j] === player)
+        || affectedArea[i][j + 1] === player)) {
         throw new Error('no adjacent block');
       }
     }
@@ -247,8 +247,7 @@ export const putBlockOnBoard = (
   rotation: number,
   player: string,
   flip = false,
-): (string | number
-  )[][] => {
+): (string | number)[][] => {
   if (position.length !== 2) {
     throw new Error('position length must be 2');
   }
