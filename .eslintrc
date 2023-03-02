@@ -22,6 +22,7 @@
   "rules": {
     "import/prefer-default-export": "off",
     "import/extensions": ["off"],
-    "no-continue": "off"
+    "no-continue": "off",
+    "space-before-blocks": "error"
   }
 }
