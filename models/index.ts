@@ -1,3 +1,16 @@
+/**
+ * How To Use
+ * 
+ * import db from '../models/index';
+ * 
+ * void db
+ *  .collection('collectionName')
+ *  .find({ ...condition })
+ *  .toArray()
+ *  .then((res) => {
+ *    ...do something with query result
+ * });
+ */
 import { MongoClient } from 'mongodb';
 
 const { MONGO_ID, MONGO_PW, MONGO_HOST } = process.env;
