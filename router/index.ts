@@ -1,6 +1,7 @@
 import {
   Router, Request, Response, NextFunction,
 } from 'express';
+import db from '../models/index.js';
 
 const mainRouter = Router();
 

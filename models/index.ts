@@ -7,5 +7,5 @@ if (!MONGO_ID || !MONGO_PW || !MONGO_HOST) {
 }
 const url = `mongodb://${MONGO_ID}:${MONGO_PW}@${MONGO_HOST}:27017/`;
 
-// [TODO] fix the type error with mongoclient
-const client = new MongoClient(url);
+const client = await new MongoClient(url).connect();
+export default client.db('blokus');

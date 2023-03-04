@@ -1,6 +1,8 @@
 import express from 'express';
 import path from 'path';
 import nunjucks from 'nunjucks';
+import * as dotenv from 'dotenv';
+dotenv.config();
 import { fileURLToPath } from 'url';
 
 import mainRouter from './router/index.js';
