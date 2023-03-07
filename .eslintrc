@@ -23,6 +23,7 @@
     "import/prefer-default-export": "off",
     "import/extensions": ["off"],
     "no-continue": "off",
-    "space-before-blocks": "error"
+    "space-before-blocks": "error",
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
   }
 }
