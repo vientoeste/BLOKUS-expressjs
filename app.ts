@@ -3,6 +3,7 @@ import express from 'express';
 import path from 'path';
 import nunjucks from 'nunjucks';
 import { fileURLToPath } from 'url';
+import morgan from 'morgan';
 const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 import mainRouter from './router/index.js';
@@ -17,6 +18,7 @@ nunjucks.configure('views', {
 });
 
 app.use(express.static(path.join(dirname, 'public')));
+app.use(morgan('dev'));
 app.use('/', mainRouter);
 
 app.listen(3000);
