@@ -3,6 +3,11 @@
  * 
  * import db from '../models/index';
  * 
+ * 1/
+ * const cursor = db.collection('collectionName')
+ * .find({ ...condition})
+ * .stream().on('data', (data) => { ...do something with 'data'})
+ * 2/
  * void db
  *  .collection('collectionName')
  *  .find({ ...condition })
