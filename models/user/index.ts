@@ -16,23 +16,32 @@ import db from '../index.js';
 const userColl = db.collection('user');
 
 interface User {
-  id?: string;
-  password?: string;
+  id: string;
+  password: string;
 }
 
-export const getUserAuthInfo = (userId: string) => new Promise((resolve, reject) => {
+export const getUserAuthInfo = (userId: string): Promise<User> => new Promise((resolve, reject) => {
   const retArr: User[] = [];
   const stream = userColl.find({ id: userId }).stream();
-  stream.on('data', (val: User & { _id: ObjectId }) => {
-    console.log('v', val);
-    retArr.push({
-      id: val.id,
-      password: val.password,
-    });
+  stream.on('data', (queryRes: (User & { _id: ObjectId })[] | (User & { _id: ObjectId })) => {
+    if (!Array.isArray(queryRes)) {
+      retArr.push({
+        id: queryRes.id,
+        password: queryRes.password,
+      });
+    }
+    if (Array.isArray(queryRes) && queryRes.length === 1) {
+      queryRes.forEach((val) => {
+        retArr.push({
+          id: val.id,
+          password: val.password,
+        });
+      });
+    }
   });
   stream.on('end', () => {
     if (retArr.length !== 1) {
-      reject('query length is not 1');
+      reject('query length not 1');
     }
     resolve(retArr[0]);
   });

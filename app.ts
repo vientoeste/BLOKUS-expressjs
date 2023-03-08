@@ -7,6 +7,7 @@ import morgan from 'morgan';
 const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 import mainRouter from './router/index.js';
+import authRouter from './router/auth.js';
 
 const app = express();
 
@@ -20,5 +21,6 @@ nunjucks.configure('views', {
 app.use(express.static(path.join(dirname, 'public')));
 app.use(morgan('dev'));
 app.use('/', mainRouter);
+app.use('/auth', authRouter);
 
 app.listen(3000);
