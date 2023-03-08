@@ -20,25 +20,23 @@ interface User {
   password?: string;
 }
 
-export const getUserAuthInfo = (userId: string) => {
-  return new Promise((resolve, reject) => {
-    const retArr: User[] = [];
-    const stream = userColl.find({ id: userId }).stream();
-    stream.on('data', (val: User & { _id: ObjectId }) => {
-      console.log('v', val);
-      retArr.push({
-        id: val.id,
-        password: val.password,
-      });
-    });
-    stream.on('end', () => {
-      if (retArr.length !== 1) {
-        reject('query length is not 1');
-      }
-      resolve(retArr[0]);
-    });
-    stream.on('error', (err) => {
-      reject(err);
+export const getUserAuthInfo = (userId: string) => new Promise((resolve, reject) => {
+  const retArr: User[] = [];
+  const stream = userColl.find({ id: userId }).stream();
+  stream.on('data', (val: User & { _id: ObjectId }) => {
+    console.log('v', val);
+    retArr.push({
+      id: val.id,
+      password: val.password,
     });
   });
-};
+  stream.on('end', () => {
+    if (retArr.length !== 1) {
+      reject('query length is not 1');
+    }
+    resolve(retArr[0]);
+  });
+  stream.on('error', (err) => {
+    reject(err);
+  });
+});
