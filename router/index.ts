@@ -1,8 +1,11 @@
 import {
   Router, Request, Response, NextFunction,
 } from 'express';
-import db from '../models/index.js';
+import { SessionData } from 'express-session';
 
+interface CustomSessionData extends SessionData {
+  views?: number;
+}
 const mainRouter = Router();
 
 mainRouter.route('/').get((req: Request, res: Response, next: NextFunction) => {
