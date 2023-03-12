@@ -22,6 +22,7 @@ nunjucks.configure('views', {
 });
 
 const redisClient = createClient();
+redisClient.connect().catch(console.error);
 
 app.use(express.static(path.join(dirname, 'public')));
 app.use(session({
