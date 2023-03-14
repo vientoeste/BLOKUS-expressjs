@@ -25,5 +25,6 @@ if (!MONGO_ID || !MONGO_PW || !MONGO_HOST) {
 }
 const url = `mongodb://${MONGO_ID}:${MONGO_PW}@${MONGO_HOST}:27017/`;
 
-const client = await new MongoClient(url).connect();
-export default client.db('blokus');
+const dbPromise = new MongoClient(url).connect().then((cli) => cli.db('blokus'));
+
+export default dbPromise;
