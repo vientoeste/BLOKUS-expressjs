@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES3",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "module": "ES2022",

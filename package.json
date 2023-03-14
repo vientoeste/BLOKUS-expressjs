@@ -16,7 +16,7 @@
     "prestart": "npm run build",
     "start": "tsc && node dist/app.js",
     "build:live": "nodemon --watch '*.ts' --exec \"ts-node\" consoletest.ts",
-    "test": "jest"
+    "test": "jest dist/"
   },
   "repository": {
     "type": "git",
