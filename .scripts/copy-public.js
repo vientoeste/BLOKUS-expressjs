@@ -1,15 +1,13 @@
-import {
+const {
     existsSync,
     lstatSync,
     writeFileSync,
     readFileSync,
     mkdirSync,
     readdirSync,
-  } from 'fs';
-import { join, basename, resolve } from "path";
-import { fileURLToPath } from "url";
-
-const dirname = fileURLToPath(new URL('.', import.meta.url))
+  } = require('fs');
+const { join, basename, resolve } = require("path");
+const { fileURLToPath } = require("url");
 
 const copyFileSync = (source, target) => {
   const targetFile =
@@ -39,8 +37,8 @@ const copyFolderRecursiveSync = (source, target) => {
   }
 }
 
-const source = resolve(dirname, "..", "public");
-const target = resolve(dirname, "..", "dist");
+const source = resolve(__dirname, "..", "public");
+const target = resolve(__dirname, "..", "dist");
 try {
   copyFolderRecursiveSync(source, target);
 } catch (e) {

@@ -3,7 +3,7 @@
     "target": "ES3",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "ES2022",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "esModuleInterop": true,

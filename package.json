@@ -2,7 +2,7 @@
   "name": "blokus",
   "version": "0.0.1",
   "description": "este's personal project :: implement a board game(blokus) using WS",
-  "type": "module",
+  "type": "commonjs",
   "watch": {
     "start": "**.js"
   },

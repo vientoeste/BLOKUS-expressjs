@@ -2,12 +2,10 @@ import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import nunjucks from 'nunjucks';
-import { fileURLToPath } from 'url';
 import morgan from 'morgan';
 import RedisStore from 'connect-redis';
 import { createClient } from 'redis';
 import session from 'express-session';
-const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 import mainRouter from './router/index.js';
 import authRouter from './router/auth.js';
@@ -24,7 +22,7 @@ nunjucks.configure('views', {
 const redisClient = createClient();
 redisClient.connect().catch(console.error);
 
-app.use(express.static(path.join(dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   resave: false,
   saveUninitialized: false,
@@ -43,3 +41,5 @@ app.use('/', mainRouter);
 app.use('/auth', authRouter);
 
 app.listen(3000);
+
+export default app;
