@@ -19,8 +19,8 @@ nunjucks.configure('views', {
   watch: true,
 });
 
-const redisClient = createClient();
-redisClient.connect().catch(console.error);
+export const redisClient = createClient();
+redisClient.connect().then(() => { }).catch(console.error);
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
@@ -40,6 +40,6 @@ app.use(morgan('dev'));
 app.use('/', mainRouter);
 app.use('/auth', authRouter);
 
-app.listen(3000);
+export const server = app.listen(3000);
 
 export default app;
