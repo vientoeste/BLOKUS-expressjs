@@ -95,7 +95,7 @@ describe('GET /ex', () => {
  */
 
 /**
- * WS, {game_uuid} - surrender
+ * WS {game_uuid} - surrender
  * surrender the game
  * emit: participant who wants to surrender
  * listen: remaining participants must play the quit player
