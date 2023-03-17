@@ -12,8 +12,12 @@ describe('GET /ex', () => {
 // RESTful api + proper WS configuration
 // [TODO] must add the test cases before development(for proper TDD)
 /**
- * GET /auth
+ * GET /
  * main page
+ */
+
+/**
+ * GET /auth
  * provides sign in/up/out form
  */
 
@@ -33,7 +37,12 @@ describe('GET /ex', () => {
  */
 
 /**
- * GET /users
+ * GET /users/my
+ * display user info
+ */
+
+/**
+ * GET /users/{user_uuid}
  * display user info
  */
 
@@ -58,13 +67,17 @@ describe('GET /ex', () => {
  */
 
 /**
- * DELETE /games/{game_uuid}
+ * WS {game_uuid} - deleteRoom
  * delete game room, only for creator
+ * emit: creator
+ * listen: participants, throw redirection to room list and alert to some ways(like modal)
  */
 
 /**
- * POST /games/{game_uuid}/join
+ * WS {game_uuid} - join
  * join the room
+ * emit: user who wants to participate the room
+ * listen: participants
  */
 
 /**
