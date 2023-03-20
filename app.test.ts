@@ -1,5 +1,6 @@
 import request from 'supertest';
 import app, { redisClient, server } from './app';
+import { CreateUserRequestBody } from './interfaces/ReqBody';
 import { client } from './models/index';
 
 beforeAll(async () => {
@@ -41,6 +42,122 @@ describe('GET /auth', () => {
 });
 
 /**
+ * POST /users
+ * sign up request
+ */
+describe('POST /users', () => {
+  it('unsuccessful sign up request: empty field', async () => {
+    const emptyIDResult = await request(app)
+      .post('/users')
+      .send({
+        id: '',
+        password: process.env.TEST_ACCOUNT_PW,
+      } as CreateUserRequestBody);
+    const emptyPWResult = await request(app)
+      .post('/users')
+      .send({
+        id: process.env.TEST_ACCOUNT_ID,
+        password: '',
+      } as CreateUserRequestBody);
+
+    expect(emptyIDResult.statusCode).toEqual(400);
+    expect(emptyPWResult.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful sign up request: missing field', async () => {
+    const emptyIDResult = await request(app)
+      .post('/users')
+      .send({
+        password: process.env.TEST_ACCOUNT_PW,
+      });
+    const emptyPWResult = await request(app)
+      .post('/users')
+      .send({
+        id: process.env.TEST_ACCOUNT_ID,
+      });
+
+    expect(emptyIDResult.statusCode).toEqual(400);
+    expect(emptyPWResult.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful sign up request: max length exceed', async () => {
+    const tooLongId: request.Response = await request(app)
+      .post('/users')
+      .send({
+        id: String(process.env.TEST_ACCOUNT_ID).repeat(100),
+        password: process.env.TEST_ACCOUNT_PW,
+      } as CreateUserRequestBody);
+    const tooLongPW: request.Response = await request(app)
+      .post('/users')
+      .send({
+        id: process.env.TEST_ACCOUNT_ID,
+        password: String(process.env.TEST_ACCOUNT_PW).repeat(100),
+      } as CreateUserRequestBody);
+
+    expect(tooLongId.statusCode).toEqual(400);
+    expect(tooLongPW.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful sign up request: short of length', async () => {
+    const tooShortId: request.Response = await request(app)
+      .post('/users')
+      .send({
+        id: String(process.env.TEST_ACCOUNT_ID).slice(0, 1),
+        password: process.env.TEST_ACCOUNT_PW,
+      } as CreateUserRequestBody);
+    const tooShortPW: request.Response = await request(app)
+      .post('/users')
+      .send({
+        id: process.env.TEST_ACCOUNT_ID,
+        password: String(process.env.TEST_ACCOUNT_PW).slice(0, 1),
+      } as CreateUserRequestBody);
+
+    expect(tooShortId.statusCode).toEqual(400);
+    expect(tooShortPW.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful sign up request: forbidden special characters', async () => {
+    const forbiddenId: request.Response = await request(app)
+      .post('/users')
+      .send({
+        id: String(process.env.TEST_ACCOUNT_ID).replace(/\d{1}/, '$'),
+        password: process.env.TEST_ACCOUNT_PW,
+      } as CreateUserRequestBody);
+    const forbiddenPW: request.Response = await request(app)
+      .post('/users')
+      .send({
+        id: process.env.TEST_ACCOUNT_ID,
+        password: String(process.env.TEST_ACCOUNT_PW).replace(/\d{1}/, '$'),
+      } as CreateUserRequestBody);
+
+    expect(forbiddenId.statusCode).toEqual(400);
+    expect(forbiddenPW.statusCode).toEqual(400);
+  });
+
+  it('successful sign up request', async () => {
+    const res: request.Response = await request(app)
+      .post('/users')
+      .send({
+        id: process.env.TEST_ACCOUNT_ID,
+        password: process.env.TEST_ACCOUNT_PW,
+      } as CreateUserRequestBody);
+
+    expect(res.statusCode).toEqual(200);
+  });
+
+  it('unsuccessful sign up request: duplicate ID', async () => {
+    const res: request.Response = await request(app)
+      .post('/users')
+      .send({
+        id: process.env.TEST_ACCOUNT_ID,
+        password: process.env.TEST_ACCOUNT_PW,
+      } as CreateUserRequestBody);
+
+    expect(res.statusCode).toEqual(400);
+  });
+});
+
+/**
  * POST /auth/signIn
  * sign in request
  */
@@ -62,19 +179,6 @@ describe('POST /auth/signOut', () => {
   it('sign out request', async () => {
     const res: request.Response = await request(app)
       .post('/auth/signOut');
-    expect(res.statusCode).toEqual(200);
-  });
-});
-
-/**
- * POST /users
- * sign up request
- */
-describe('POST /users', () => {
-  it('sign up request', async () => {
-    const res: request.Response = await request(app)
-      .post('/users')
-      .send({ /* some auth info */ });
     expect(res.statusCode).toEqual(200);
   });
 });
