@@ -7,8 +7,8 @@ import RedisStore from 'connect-redis';
 import { createClient } from 'redis';
 import session from 'express-session';
 
-import mainRouter from './router/index.js';
-import authRouter from './router/auth.js';
+import mainRouter from './controllers/index.js';
+import authRouter from './controllers/auth.js';
 
 class CustomError extends Error {
   constructor(message: string, status?: number) {
