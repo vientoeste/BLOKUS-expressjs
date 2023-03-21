@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app, { redisClient, server } from './app';
-import { CreateUserRequestBody } from './interfaces/ReqBody';
+import { CreateGameRequestBody, CreateUserRequestBody, UpdateGameRequestBody } from './interfaces/ReqBody';
 import { client } from './models/index';
 
 beforeAll(async () => {
@@ -213,12 +213,93 @@ describe('GET /users/{user_uuid}', () => {
  * make a room for game
  */
 describe('POST /games', () => {
-  it('successfully creates a room for game', async () => {
+  it('unsuccessful game room create request: missing title field', async () => {
     const res: request.Response = await request(app)
       .post('/games')
-      .send({ /* some game room info */ });
+      .send({
+        maxParticipants: 2,
+      } as CreateGameRequestBody);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful game room create request: missing maxParticipants field', async () => {
+    const res: request.Response = await request(app)
+      .post('/games')
+      .send({
+        title: 'exRoom',
+      } as CreateGameRequestBody);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful game room create request: empty title', async () => {
+    const res: request.Response = await request(app)
+      .post('/games')
+      .send({
+        title: '',
+        maxParticipants: 2,
+      } as CreateGameRequestBody);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful game room create request: too big maxParticipants', async () => {
+    const res: request.Response = await request(app)
+      .post('/games')
+      .send({
+        title: 'exRoom',
+        maxParticipants: 5,
+      } as CreateGameRequestBody);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful game room create request: too small maxParticipants', async () => {
+    const res: request.Response = await request(app)
+      .post('/games')
+      .send({
+        title: 'exRoom',
+        maxParticipants: 0,
+      } as CreateGameRequestBody);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful game room create request: too long title', async () => {
+    const res: request.Response = await request(app)
+      .post('/games')
+      .send({
+        title: 'exRoom'.repeat(100),
+        maxParticipants: 2,
+      } as CreateGameRequestBody);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('successful game room create request - without password', async () => {
+    const res: request.Response = await request(app)
+      .post('/games')
+      .send({
+        title: 'exRoom',
+        maxParticipants: 2,
+      } as CreateGameRequestBody);
     expect(res.statusCode).toEqual(201);
-    expect(res.body).toEqual({ /* some json response */ });
+  });
+
+  it('successful game room create request - with password', async () => {
+    const res: request.Response = await request(app)
+      .post('/games')
+      .send({
+        title: 'exPrivRoom',
+        maxParticipants: 2,
+        password: 'pwForexPrivRoom',
+      } as CreateGameRequestBody);
+    expect(res.statusCode).toEqual(201);
+  });
+
+  it('unsuccessful game room create request: duplicate room title', async () => {
+    const res: request.Response = await request(app)
+      .post('/games')
+      .send({
+        title: 'exRoom',
+        maxParticipants: 2,
+      } as CreateGameRequestBody);
+    expect(res.statusCode).toEqual(400);
   });
 });
 
@@ -252,13 +333,84 @@ describe('GET /games/:game_uuid', () => {
  * [optional] update room info(game settings)
  */
 describe('PUT /games/:game_uuid', () => {
-  it('successfully updates room info', async () => {
+  it('unsuccessful room info update request: missing field', async () => {
     const gameUuid = 'some-game-uuid';
     const res: request.Response = await request(app)
       .put(`/games/${gameUuid}`)
-      .send({ /* some updated game room info */ });
+      .send({} as Partial<UpdateGameRequestBody>);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful room info update request: empty title field', async () => {
+    const gameUuid = 'some-game-uuid';
+    const res: request.Response = await request(app)
+      .put(`/games/${gameUuid}`)
+      .send({ title: '' } as Partial<UpdateGameRequestBody>);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful room info update request: empty password field', async () => {
+    const gameUuid = 'some-game-uuid';
+    const res: request.Response = await request(app)
+      .put(`/games/${gameUuid}`)
+      .send({ password: '' } as Partial<UpdateGameRequestBody>);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful room info update request: too long title', async () => {
+    const gameUuid = 'some-game-uuid';
+    const res: request.Response = await request(app)
+      .put(`/games/${gameUuid}`)
+      .send({ title: 'toolongtitle'.repeat(10) } as Partial<UpdateGameRequestBody>);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful room info update request: too big maxParticipants', async () => {
+    const gameUuid = 'some-game-uuid';
+    const res: request.Response = await request(app)
+      .put(`/games/${gameUuid}`)
+      .send({ maxParticipants: 5 } as Partial<UpdateGameRequestBody>);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful room info update request: too small maxParticipants', async () => {
+    const gameUuid = 'some-game-uuid';
+    const res: request.Response = await request(app)
+      .put(`/games/${gameUuid}`)
+      .send({ maxParticipants: 0 } as Partial<UpdateGameRequestBody>);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('successful room info update request - maxParticipants', async () => {
+    const gameUuid = 'some-game-uuid';
+    const res: request.Response = await request(app)
+      .put(`/games/${gameUuid}`)
+      .send({ maxParticipants: 4 } as Partial<UpdateGameRequestBody>);
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toEqual({ /* some json response */ });
+  });
+
+  it('successful room info update request - password(injectPW)', async () => {
+    const gameUuid = 'some-game-uuid';
+    const res: request.Response = await request(app)
+      .put(`/games/${gameUuid}`)
+      .send({ password: 'passwordOfexRoom' } as Partial<UpdateGameRequestBody>);
+    expect(res.statusCode).toEqual(200);
+  });
+
+  it('successful room info update request - password(changePW)', async () => {
+    const gameUuid = 'some-game-uuid';
+    const res: request.Response = await request(app)
+      .put(`/games/${gameUuid}`)
+      .send({ password: 'passwordOfexRoom' } as Partial<UpdateGameRequestBody>);
+    expect(res.statusCode).toEqual(200);
+  });
+
+  it('successful room info update request - title', async () => {
+    const gameUuid = 'some-game-uuid';
+    const res: request.Response = await request(app)
+      .put(`/games/${gameUuid}`)
+      .send({ title: 'exRoom1' } as Partial<UpdateGameRequestBody>);
+    expect(res.statusCode).toEqual(200);
   });
 });
 
