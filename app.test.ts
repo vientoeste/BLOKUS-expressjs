@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app, { redisClient, server } from './app';
-import { CreateGameRequestBody, CreateUserRequestBody, UpdateGameRequestBody } from './interfaces/ReqBody';
+import { CreateGameRequestBody, CreateUserRequestBody, SignInRequestBody, UpdateGameRequestBody } from './interfaces/ReqBody';
 import { client } from './models/index';
 
 beforeAll(async () => {
@@ -162,12 +162,52 @@ describe('POST /users', () => {
  * sign in request
  */
 describe('POST /auth', () => {
-  it('sign in request', async () => {
+  it('unsuccessful sign in request: missing ID field', async () => {
     const res: request.Response = await request(app)
       .post('/auth')
-      .send({ /* some auth info */ });
+      .send({
+        password: process.env.TEST_ACCOUNT_PW,
+      });
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful sign in request: missing PW field', async () => {
+    const res: request.Response = await request(app)
+      .post('/auth')
+      .send({
+        id: process.env.TEST_ACCOUNT_ID,
+      });
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful sign in request: empty ID field', async () => {
+    const res: request.Response = await request(app)
+      .post('/auth')
+      .send({
+        id: '',
+        password: process.env.TEST_ACCOUNT_PW,
+      } as SignInRequestBody);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful sign in request: empty PW field', async () => {
+    const res: request.Response = await request(app)
+      .post('/auth')
+      .send({
+        id: process.env.TEST_ACCOUNT_ID,
+        password: '',
+      } as SignInRequestBody);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('successful sign in request', async () => {
+    const res: request.Response = await request(app)
+      .post('/auth')
+      .send({
+        id: process.env.TEST_ACCOUNT_ID,
+        password: process.env.TEST_ACCOUNT_PW,
+      } as SignInRequestBody);
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toEqual({/* some json response */ });
   });
 });
 
