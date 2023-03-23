@@ -200,6 +200,26 @@ describe('POST /auth', () => {
     expect(res.statusCode).toEqual(400);
   });
 
+  it('unsuccessful sign in request: wrong PW', async () => {
+    const res: request.Response = await request(app)
+      .post('/auth')
+      .send({
+        id: process.env.TEST_ACCOUNT_ID,
+        password: '',
+      } as SignInRequestBody);
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it('unsuccessful sign in request: non-existing ID', async () => {
+    const res: request.Response = await request(app)
+      .post('/auth')
+      .send({
+        id: String(process.env.TEST_ACCOUNT_ID).slice(0, -1),
+        password: '',
+      } as SignInRequestBody);
+    expect(res.statusCode).toEqual(400);
+  });
+
   it('successful sign in request', async () => {
     const res: request.Response = await request(app)
       .post('/auth')
