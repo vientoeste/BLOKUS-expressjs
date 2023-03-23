@@ -1,0 +1,116 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "BLOKUS-expressjs API",
+        "description": "API for BLOKUS-expressjs",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "description": "Returns the main page",
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/auth": {
+            "get": {
+                "description": "Returns the sign in/up/out form",
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "post": {
+                "description": "Sign up request",
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/auth/signIn": {
+            "post": {
+                "description": "Sign in request",
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/auth/signOut": {
+            "post": {
+                "description": "Sign out request",
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/users/my": {
+            "get": {
+                "description": "Displays user info",
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/users/{user_uuid}": {
+            "get": {
+                "description": "Displays user info",
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/games": {
+            "post": {
+                "description": "Make a room for game",
+                "responses": {
+                    "201": {
+                        "description": "Successful response"
+                    }
+                }
+            },
+            "get": {
+                "description": "Displays a list of rooms",
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/games/{game_uuid}": {
+            "get": {
+                "description": "Displays room info (game settings)",
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            },
+            "put": {
+                "description": "Updates room info (game settings)",
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        }
+    }
+}

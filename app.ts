@@ -6,6 +6,8 @@ import morgan from 'morgan';
 import RedisStore from 'connect-redis';
 import { createClient } from 'redis';
 import session from 'express-session';
+import { serve, setup } from 'swagger-ui-express';
+import swaggerDocument from './swagger.json';
 
 import mainRouter from './controllers/index.js';
 import authRouter from './controllers/auth.js';
@@ -55,6 +57,7 @@ app.use(session({
 app.use(morgan('dev'));
 app.use('/', mainRouter);
 app.use('/auth', authRouter);
+app.use('/api-docs', serve, setup(swaggerDocument));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error = new CustomError(`Not existing router: ${req.method} ${req.url}`);
