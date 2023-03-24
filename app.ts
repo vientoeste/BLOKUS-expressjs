@@ -1,4 +1,48 @@
 import 'dotenv/config';
+// intended to be used with block scope
+const validateEnvVars = () => {
+  const RequiredEnvironmentVars = [
+    'MONGO_ID',
+    'MONGO_PW',
+    'MONGO_HOST',
+    'COOKIE_SECRET',
+    'PORT',
+    'NODE_ENV',
+    'TEST_ACCOUNT_ID',
+    'TEST_ACCOUNT_PW',
+  ];
+  const {
+    MONGO_ID,
+    MONGO_PW,
+    MONGO_HOST,
+    COOKIE_SECRET,
+    PORT,
+    NODE_ENV,
+    TEST_ACCOUNT_ID,
+    TEST_ACCOUNT_PW,
+  } = process.env;
+  const invalidParams = [
+    MONGO_ID,
+    MONGO_PW,
+    MONGO_HOST,
+    COOKIE_SECRET,
+    PORT,
+    NODE_ENV,
+    TEST_ACCOUNT_ID,
+    TEST_ACCOUNT_PW,
+  ].map((param, index) => {
+    if (typeof param === 'undefined' || param === null) {
+      return RequiredEnvironmentVars[index];
+    }
+    return 0;
+  }).filter(e => e !== 0);
+
+  if (invalidParams.length > 0) {
+    throw new Error(`missing system env params: ${invalidParams.join(', ')}`);
+  }
+};
+validateEnvVars();
+
 import express, { NextFunction, Request, Response } from 'express';
 import path from 'path';
 import nunjucks from 'nunjucks';
