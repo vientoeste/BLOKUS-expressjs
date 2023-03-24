@@ -122,7 +122,7 @@ app.use((err: CustomError, req: Request, res: Response, _next: NextFunction) => 
   res.redirect(`${req.url}/?error=${err.message}`);
 });
 
-export const server = app.listen(3000);
+export const server = app.listen(process.env.PORT);
 
 export default app;
 
