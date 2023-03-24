@@ -12,15 +12,15 @@
  * ...
  */
 import { ObjectId } from 'mongodb';
-import dbPromise from '../index.js';
+import { client } from '../index.js';
 
 interface User {
   id: string;
   password: string;
 }
 
-export const getUserAuthInfo = (userId: string): Promise<User> => dbPromise.then((db) => {
-  const userColl = db.collection('user');
+export const getUserAuthInfo = (userId: string): Promise<User> => {
+  const userColl = client.db('blokus').collection('user');
   return new Promise((resolve, reject) => {
     const retArr: User[] = [];
     const stream = userColl.find({ id: userId }).stream();
@@ -50,4 +50,4 @@ export const getUserAuthInfo = (userId: string): Promise<User> => dbPromise.then
       reject(err);
     });
   });
-});
+};

@@ -53,6 +53,7 @@ import session from 'express-session';
 import { serve, setup } from 'swagger-ui-express';
 import swaggerDocument from './swagger.json';
 
+import { client } from './models/index.js';
 import mainRouter from './controllers/index.js';
 import authRouter from './controllers/auth.js';
 
@@ -80,6 +81,10 @@ nunjucks.configure('views', {
   express: app,
   watch: true,
 });
+
+if (process.env.NODE_ENV !== 'test') {
+  client.connect().then(() => { }).catch(console.error);
+}
 
 export const redisClient = createClient();
 redisClient.connect().then(() => { }).catch(console.error);
@@ -120,3 +125,9 @@ app.use((err: CustomError, req: Request, res: Response, _next: NextFunction) => 
 export const server = app.listen(3000);
 
 export default app;
+
+process.on('exit', () => {
+  if (process.env.NODE_ENV !== 'test') {
+    client.close().then(() => { }).catch(console.error);
+  }
+});

@@ -25,7 +25,8 @@ if (!MONGO_ID || !MONGO_PW || !MONGO_HOST) {
 }
 const url = `mongodb://${MONGO_ID}:${MONGO_PW}@${MONGO_HOST}:27017/`;
 
-// [TODO] 각 라우터에서 매 접속 시 connection을 생성하는가?
-const dbPromise = new MongoClient(url).connect().then((cli) => cli.db('blokus'));
+export const client = new MongoClient(url);
 
-export default dbPromise;
+client.on('connectionCreated', () => console.log('connected to db'));
+client.on('error', (e) => console.error(e));
+client.on('close', () => console.log('mongodb connection closed'));
