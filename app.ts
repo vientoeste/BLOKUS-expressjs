@@ -31,7 +31,7 @@ const validateEnvVars = () => {
     TEST_ACCOUNT_ID,
     TEST_ACCOUNT_PW,
   ].map((param, index) => {
-    if (typeof param === 'undefined' || param === null) {
+    if (typeof param === 'undefined' || param === null || param === '') {
       return RequiredEnvironmentVars[index];
     }
     return 0;
