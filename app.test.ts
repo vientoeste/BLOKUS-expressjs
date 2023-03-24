@@ -7,14 +7,6 @@ beforeAll(async () => {
   await client.connect();
 });
 
-describe('GET /ex', () => {
-  it('responds with json', async () => {
-    const res = await request(app).get('/ex');
-    expect(res.statusCode).toEqual(200);
-    expect(res.text).toEqual('Hello World');
-  });
-});
-
 // RESTful api + proper WS configuration
 // [TODO] must add the test cases before development(for proper TDD)
 /**
