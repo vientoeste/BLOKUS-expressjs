@@ -103,13 +103,14 @@ app.use('/', mainRouter);
 app.use('/auth', authRouter);
 app.use('/api-docs', serve, setup(swaggerDocument));
 
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req: Request, _res: Response, next: NextFunction) => {
   const error = new CustomError(`Not existing router: ${req.method} ${req.url}`);
   error.status = 404;
   next(error);
 });
 
-app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: CustomError, req: Request, res: Response, _next: NextFunction) => {
   res.locals.message = err.message;
   res.locals.error = err;
   res.status(err.status ?? 500);
