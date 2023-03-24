@@ -17,7 +17,7 @@
     "start": "tsc && node dist/app.js",
     "build:live": "nodemon --watch '*.ts' --exec \"ts-node\" consoletest.ts",
     "pretest": "npm run build",
-    "test": "jest dist/",
+    "test": "jest dist/ --forceExit",
     "test:debug": "jest dist/ --detectOpenHandles"
   },
   "repository": {
